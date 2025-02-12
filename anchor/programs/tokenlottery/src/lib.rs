@@ -29,7 +29,7 @@ use anchor_spl::{
   associated_token::AssociatedToken
 };
 
-declare_id!("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
+declare_id!("CWDQ2VCFe9GLbSxS92wQ23wrB8h176B98NVgrDJJdSLW");
 
 
 #[constant]
