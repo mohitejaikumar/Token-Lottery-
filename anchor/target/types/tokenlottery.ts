@@ -401,40 +401,7 @@ export type Tokenlottery = {
         },
         {
           "name": "ticketMint",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116,
-                  105,
-                  99,
-                  107,
-                  101,
-                  116,
-                  95,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "payer"
-              },
-              {
-                "kind": "account",
-                "path": "token_lottery.id",
-                "account": "tokenLottery"
-              },
-              {
-                "kind": "account",
-                "path": "token_lottery.number_of_tickets",
-                "account": "tokenLottery"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "destinationTokenAccount",

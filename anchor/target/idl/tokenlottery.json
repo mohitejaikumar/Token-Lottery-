@@ -395,40 +395,7 @@
         },
         {
           "name": "ticket_mint",
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116,
-                  105,
-                  99,
-                  107,
-                  101,
-                  116,
-                  95,
-                  109,
-                  105,
-                  110,
-                  116
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "payer"
-              },
-              {
-                "kind": "account",
-                "path": "token_lottery.id",
-                "account": "TokenLottery"
-              },
-              {
-                "kind": "account",
-                "path": "token_lottery.number_of_tickets",
-                "account": "TokenLottery"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "destination_token_account",

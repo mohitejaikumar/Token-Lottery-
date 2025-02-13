@@ -634,15 +634,7 @@ pub struct ClaimPrize<'info> {
     #[account(mut)]
     pub token_lottery: Account<'info, TokenLottery>,
 
-    #[account(
-      seeds = [
-        b"ticket_mint".as_ref(),
-        payer.key().as_ref(),
-        token_lottery.id.to_le_bytes().as_ref(),
-        token_lottery.number_of_tickets.to_le_bytes().as_ref()
-      ],
-      bump,
-    )]
+    #[account(mut)]
     pub ticket_mint: InterfaceAccount<'info, Mint>,
 
     #[account(
