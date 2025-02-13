@@ -1,5 +1,5 @@
 {
-  "address": "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF",
+  "address": "CWDQ2VCFe9GLbSxS92wQ23wrB8h176B98NVgrDJJdSLW",
   "metadata": {
     "name": "tokenlottery",
     "version": "0.1.0",
@@ -77,41 +77,8 @@
                 "path": "payer"
               },
               {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
+                "kind": "account",
+                "path": "token_program"
               },
               {
                 "kind": "account",
@@ -228,7 +195,11 @@
                   110
                 ]
               }
-            ]
+            ],
+            "program": {
+              "kind": "account",
+              "path": "token_metadata_program"
+            }
           }
         },
         {
@@ -293,13 +264,6 @@
               {
                 "kind": "const",
                 "value": [
-                  109,
-                  97,
-                  115,
-                  116,
-                  101,
-                  114,
-                  95,
                   101,
                   100,
                   105,
@@ -309,7 +273,11 @@
                   110
                 ]
               }
-            ]
+            ],
+            "program": {
+              "kind": "account",
+              "path": "token_metadata_program"
+            }
           }
         },
         {
@@ -391,38 +359,7 @@
         },
         {
           "name": "token_lottery",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  108,
-                  111,
-                  116,
-                  116,
-                  101,
-                  114,
-                  121
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "payer"
-              },
-              {
-                "kind": "account",
-                "path": "token_lottery.id",
-                "account": "TokenLottery"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "randomness_account_data"
@@ -685,38 +622,7 @@
         },
         {
           "name": "token_lottery",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  108,
-                  111,
-                  116,
-                  116,
-                  101,
-                  114,
-                  121
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "payer"
-              },
-              {
-                "kind": "account",
-                "path": "token_lottery.id",
-                "account": "TokenLottery"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "randomness_account_data"

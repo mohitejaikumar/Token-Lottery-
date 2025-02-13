@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/tokenlottery.json`.
  */
 export type Tokenlottery = {
-  "address": "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF",
+  "address": "CWDQ2VCFe9GLbSxS92wQ23wrB8h176B98NVgrDJJdSLW",
   "metadata": {
     "name": "tokenlottery",
     "version": "0.1.0",
@@ -83,41 +83,8 @@ export type Tokenlottery = {
                 "path": "payer"
               },
               {
-                "kind": "const",
-                "value": [
-                  6,
-                  221,
-                  246,
-                  225,
-                  215,
-                  101,
-                  161,
-                  147,
-                  217,
-                  203,
-                  225,
-                  70,
-                  206,
-                  235,
-                  121,
-                  172,
-                  28,
-                  180,
-                  133,
-                  237,
-                  95,
-                  91,
-                  55,
-                  145,
-                  58,
-                  140,
-                  245,
-                  133,
-                  126,
-                  255,
-                  0,
-                  169
-                ]
+                "kind": "account",
+                "path": "tokenProgram"
               },
               {
                 "kind": "account",
@@ -234,7 +201,11 @@ export type Tokenlottery = {
                   110
                 ]
               }
-            ]
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
           }
         },
         {
@@ -299,13 +270,6 @@ export type Tokenlottery = {
               {
                 "kind": "const",
                 "value": [
-                  109,
-                  97,
-                  115,
-                  116,
-                  101,
-                  114,
-                  95,
                   101,
                   100,
                   105,
@@ -315,7 +279,11 @@ export type Tokenlottery = {
                   110
                 ]
               }
-            ]
+            ],
+            "program": {
+              "kind": "account",
+              "path": "tokenMetadataProgram"
+            }
           }
         },
         {
@@ -397,38 +365,7 @@ export type Tokenlottery = {
         },
         {
           "name": "tokenLottery",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  108,
-                  111,
-                  116,
-                  116,
-                  101,
-                  114,
-                  121
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "payer"
-              },
-              {
-                "kind": "account",
-                "path": "token_lottery.id",
-                "account": "tokenLottery"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "randomnessAccountData"
@@ -691,38 +628,7 @@ export type Tokenlottery = {
         },
         {
           "name": "tokenLottery",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  116,
-                  111,
-                  107,
-                  101,
-                  110,
-                  95,
-                  108,
-                  111,
-                  116,
-                  116,
-                  101,
-                  114,
-                  121
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "payer"
-              },
-              {
-                "kind": "account",
-                "path": "token_lottery.id",
-                "account": "tokenLottery"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "randomnessAccountData"

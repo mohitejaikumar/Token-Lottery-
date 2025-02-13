@@ -71,10 +71,10 @@ pub mod tokenlottery {
        ctx: Context<InitializeLottery>,
        id: u64
     ) -> Result<()> {
-
+      let pkey = ctx.accounts.payer.key();
       let signer_seeds: &[&[&[u8]]] = &[&[
         b"collection_mint".as_ref(),
-        &ctx.accounts.payer.key().to_bytes()[..],
+        pkey.as_ref(),
         &id.to_le_bytes(),
         &[ctx.bumps.collection_mint]
       ]];
@@ -83,7 +83,9 @@ pub mod tokenlottery {
       // create metadata
       // create master edition
       // sing_metadata
-
+      msg!("Collection mint : {:?}", ctx.accounts.collection_mint.key());
+      msg!("Collection mint seeds : {:?}", signer_seeds);
+      msg!("Collection mint bump : {:?}", ctx.bumps.collection_mint);
       msg!("Mint the collection NFT");
       let cpi_context = CpiContext::new_with_signer(
         ctx.accounts.token_program.to_account_info(),
@@ -123,7 +125,7 @@ pub mod tokenlottery {
           uri: URI.to_string(),
           seller_fee_basis_points: 0,
           creators: Some(vec![Creator {
-            address: ctx.accounts.payer.key(),
+            address: ctx.accounts.collection_mint.key(),
             verified: false,
             share: 100
           }]),
@@ -203,13 +205,15 @@ pub mod tokenlottery {
 
       ctx.accounts.token_lottery.lottery_pot_amount += ctx.accounts.token_lottery.price;
 
-      let signer_seeds:&[&[&[u8]]] = &[&[
-        b"ticket_mint".as_ref(),
-        &ctx.accounts.payer.key().to_bytes()[..],
+      let pkey = ctx.accounts.payer.key();
+      let signer_seeds: &[&[&[u8]]] = &[&[
+        b"collection_mint".as_ref(),
+        pkey.as_ref(),
         &ctx.accounts.token_lottery.id.to_le_bytes(),
-        &ctx.accounts.token_lottery.number_of_tickets.to_le_bytes(),
-        &[ctx.bumps.ticket_mint]
+        &[ctx.bumps.collection_mint]
       ]];
+
+      msg!("Number of tickets: {}, token lottery id {}", ctx.accounts.token_lottery.number_of_tickets, ctx.accounts.token_lottery.id);
 
       // mint the ticket
       msg!("Mint the collection NFT");
@@ -250,7 +254,11 @@ pub mod tokenlottery {
           symbol: SYMBOL.to_string(),
           uri: URI.to_string(),
           seller_fee_basis_points: 0,
-          creators: None,
+          creators: Some(vec![Creator {
+            address: ctx.accounts.collection_mint.key(),
+            verified: false,
+            share: 100
+          }]),
           collection: None,
           uses: None,
         },
@@ -285,21 +293,22 @@ pub mod tokenlottery {
 
       msg!("verifying");
 
+      let cpi_context = CpiContext::new_with_signer(
+        ctx.accounts.token_metadata_program.to_account_info(),
+        SetAndVerifySizedCollectionItem {
+          metadata: ctx.accounts.metadata.to_account_info(),
+          payer: ctx.accounts.payer.to_account_info(),
+          collection_authority: ctx.accounts.collection_mint.to_account_info(),
+          collection_master_edition: ctx.accounts.collection_master_edition.to_account_info(),
+          collection_metadata: ctx.accounts.collection_metadata.to_account_info(),
+          collection_mint: ctx.accounts.collection_mint.to_account_info(),
+          update_authority: ctx.accounts.collection_mint.to_account_info(),
+        },
+        signer_seeds
+      );
+
       set_and_verify_sized_collection_item(
-        CpiContext::new_with_signer(
-          ctx.accounts.token_metadata_program.to_account_info(),
-          SetAndVerifySizedCollectionItem {
-            metadata: ctx.accounts.metadata.to_account_info(),
-            collection_authority: ctx.accounts.collection_mint.to_account_info(),
-            collection_master_edition: ctx.accounts.collection_master_edition.to_account_info(),
-            collection_metadata: ctx.accounts.collection_metadata.to_account_info(),
-            collection_mint: ctx.accounts.collection_mint.to_account_info(),
-            payer: ctx.accounts.payer.to_account_info(),
-            update_authority: ctx.accounts.collection_mint.to_account_info(),
-           
-          },
-          signer_seeds
-        ),
+        cpi_context,
         None
       )?;
 
@@ -510,7 +519,8 @@ pub struct BuyTicket<'info> {
       init,
       payer = payer,
       associated_token::mint = ticket_mint,
-      associated_token::authority = payer
+      associated_token::authority = payer,
+      associated_token::token_program = token_program,
     )]
     pub destination_token_account: InterfaceAccount<'info, TokenAccount>,
     
@@ -518,7 +528,7 @@ pub struct BuyTicket<'info> {
     #[account(
       mut,
       seeds = [
-        b"metadata".as_ref(),
+        b"metadata",
         token_metadata_program.key().as_ref(),
         ticket_mint.key().as_ref()
       ],
@@ -531,12 +541,13 @@ pub struct BuyTicket<'info> {
     #[account(
       mut,
       seeds = [
-        b"metadata".as_ref(),
+        b"metadata",
         token_metadata_program.key().as_ref(),
         ticket_mint.key().as_ref(),
-        b"edition".as_ref()
+        b"edition"
       ],
       bump,
+      seeds::program = token_metadata_program.key(),
     )]
     /// CHECK: This account will be initialized by the metaplex program
     pub master_edition: UncheckedAccount<'info>,
@@ -544,7 +555,7 @@ pub struct BuyTicket<'info> {
     #[account(
       mut,
       seeds = [
-        b"metadata".as_ref(),
+        b"metadata",
         token_metadata_program.key().as_ref(),
         collection_mint.key().as_ref()
       ],
@@ -557,12 +568,13 @@ pub struct BuyTicket<'info> {
     #[account(
       mut,
       seeds = [
-        b"metadata".as_ref(),
+        b"metadata",
         token_metadata_program.key().as_ref(),
         collection_mint.key().as_ref(),
-        b"master_edition".as_ref()
+        b"edition"
       ],
       bump,
+      seeds::program = token_metadata_program.key(),
     )]
     /// CHECK: This account will be initialized by the metaplex program
     pub collection_master_edition: UncheckedAccount<'info>,
@@ -571,7 +583,7 @@ pub struct BuyTicket<'info> {
     #[account(
       mut,
       seeds = [
-        b"collection_mint".as_ref(),
+        b"collection_mint",
         payer.key().as_ref(),
         token_lottery.id.to_le_bytes().as_ref(),
       ],
@@ -592,15 +604,7 @@ pub struct CommitWinner<'info> {
   #[account(mut)]
   pub payer: Signer<'info>,
 
-  #[account(
-    mut,
-    seeds = [
-      b"token_lottery".as_ref(),
-      payer.key().as_ref(),
-      token_lottery.id.to_le_bytes().as_ref(),
-    ],
-    bump
-  )]
+  #[account(mut)]
   pub token_lottery: Account<'info, TokenLottery>,
   /// CHECK: This account will be initialized by the metaplex program
   pub randomness_account_data: UncheckedAccount<'info>,
@@ -614,15 +618,7 @@ pub struct ChooseWinner<'info> {
   #[account(mut)]
   pub payer: Signer<'info>,
 
-  #[account(
-    mut,
-    seeds = [
-      b"token_lottery".as_ref(),
-      payer.key().as_ref(),
-      token_lottery.id.to_le_bytes().as_ref(),
-    ],
-    bump,
-  )]
+  #[account(mut)]
   pub token_lottery: Account<'info, TokenLottery>,
   /// CHECK: This account will be initialized by the metaplex program
   pub randomness_account_data: UncheckedAccount<'info>,
